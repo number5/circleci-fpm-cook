@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+       - image: circleci/ruby:2.5.3
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: |
+          ./.circleci/check_git_changes.sh
+        
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
