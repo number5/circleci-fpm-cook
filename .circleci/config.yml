@@ -1,18 +1,47 @@
-version: 2
+version: 2.1
+
+orbs:
+  compare-url: iynere/compare-url@0.4.8
+
+workflows:
+  version: 2
+  publish-orbs:
+    jobs:
+      - compare-url/reconstruct
+      - publish:
+          requires:
+            - compare-url/reconstruct
+
 jobs:
-  build:
+  publish:
     docker:
-      # specify the version you desire here
-       - image: circleci/ruby:2.5.3
-
-    working_directory: ~/repo
-
+      - image: circleci/circleci-cli
     steps:
       - checkout
 
-      - run: |
-          ./.circleci/check_git_changes.sh
-        
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+      - attach_workspace:
+          at: workspace
+
+      - run:
+          name: Publish modified orbs
+          shell: /bin/bash -exo pipefail
+          command: |
+            # save value stored in file to a local env var
+            CIRCLE_COMPARE_URL=$(cat workspace/CIRCLE_COMPARE_URL.txt)
+
+            COMMIT_RANGE=$(echo $CIRCLE_COMPARE_URL | sed 's:^.*/compare/::g')
+
+            echo "Commit range: $COMMIT_RANGE"
+
+            for RECIPE in ./*/; do
+
+              RECIPEname=$(basename $RECIPE)
+
+              if [[ $(git diff $COMMIT_RANGE --name-status | grep "$RECIPEname") ]]; then
+
+                echo "publishing ${RECIPEname}"
+
+              else
+                echo "${RECIPEname} not modified; no need to publish"
+              fi
+            done
