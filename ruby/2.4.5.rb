@@ -1,12 +1,12 @@
-class Ruby242 < FPM::Cookery::Recipe
+class Ruby245 < FPM::Cookery::Recipe
   description 'The Ruby virtual machine'
 
   name 'ruby'
-  version '1:2.4.2'
+  version '1:2.4.5'
   revision 0
   homepage 'http://www.ruby-lang.org/'
-  source 'https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.2.tar.gz'
-  sha256 '93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c'
+  source 'https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.5.tar.gz'
+  sha256 '6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198'
 
   section 'interpreters'
 
