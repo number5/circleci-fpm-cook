@@ -1,4 +1,4 @@
-class Ruby245 < FPM::Cookery::Recipe
+class Ruby2 < FPM::Cookery::Recipe
   description 'The Ruby virtual machine'
 
   name 'ruby'
