@@ -6,7 +6,7 @@ class Nginx < FPM::Cookery::Recipe
   revision 1
   homepage 'http://nginx.org/'
   source   "http://nginx.org/download/nginx-#{version}.tar.gz"
-  sha256   '305f379da1d5fb5aefa79e45c829852ca6983c7cd2a79328f8e084a324cf0416'
+  sha256   '002d9f6154e331886a2dd4e6065863c9c1cf8291ae97a1255308572c02be9797'
 
   section 'httpd'
 
