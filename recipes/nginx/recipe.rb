@@ -34,6 +34,7 @@ class Nginx < FPM::Cookery::Recipe
       '--with-http_addition_module',
       '--with-http_gzip_static_module',
       '--with-http_v2_module',
+      '--add-module=headers-more-nginx-module-0.33',
 
       :prefix => prefix,
 
