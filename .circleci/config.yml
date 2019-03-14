@@ -12,7 +12,7 @@ workflows:
 jobs:
   publish:
     docker:
-      - image: circleci/circleci-cli
+      - image: dubber/fpm-cook:trusty-b1
     working_directory: ~/fpm-recipes
     steps:
       - checkout
