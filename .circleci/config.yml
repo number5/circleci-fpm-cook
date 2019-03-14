@@ -18,9 +18,11 @@ jobs:
       - checkout
       - compare-url/reconstruct
       - run:
-          name: Publish modified orbs
+          name: Building debs
           shell: /bin/bash -exo pipefail
           command: |
+            # create artifacts folder
+            mkdir /tmp/artifacts
             # save value stored in file to a local env var
             CIRCLE_COMPARE_URL=$(cat CIRCLE_COMPARE_URL.txt)
 
@@ -34,18 +36,20 @@ jobs:
 
               if [[ $(git diff $COMMIT_RANGE --name-status | grep "$RECIPEname") ]]; then
 
-                echo "publishing ${RECIPEname}"
+                echo "building ${RECIPEname}"
+                cd ~/fpm-recipes/recipes/${RECIPEname}/
+                fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts 
 
               else
-                echo "${RECIPEname} not modified; no need to publish"
+                echo "${RECIPEname} not modified; no need to build"
               fi
             done
       - run:
           name: Build nginx
           shell: /bin/bash -exo pipefail
           command: |
-            # build it with fpm
             cd recipes/nginx
-            fpm-cook package -t deb -p ubuntu --pkg-dir /tmp 
-            ls /tmp/
-
+            fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts 
+            ls /tmp/artifacts
+      - store_artifacts:
+          path: /tmp/artifacts
