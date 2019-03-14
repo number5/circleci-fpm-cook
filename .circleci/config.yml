@@ -28,7 +28,7 @@ jobs:
 
             echo "Commit range: $COMMIT_RANGE"
 
-            for RECIPE in ~/fpm-recipes/*/; do
+            for RECIPE in ~/fpm-recipes/recipes/*/; do
 
               RECIPEname=$(basename $RECIPE)
 
@@ -40,3 +40,12 @@ jobs:
                 echo "${RECIPEname} not modified; no need to publish"
               fi
             done
+      - run:
+          name: Build nginx
+          shell: /bin/bash -exo pipefail
+          command: |
+            # build it with fpm
+            cd recipes/nginx
+            fpm-cook package -t deb -p ubuntu --pkg-dir /tmp 
+            ls /tmp/
+
