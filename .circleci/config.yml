@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  compare-url: iynere/compare-url@0.4.8
+  compare-url: iynere/compare-url@0.4.9
 
 workflows:
   version: 2
@@ -21,6 +21,8 @@ jobs:
           name: Building debs
           shell: /bin/bash -exo pipefail
           command: |
+            # hack
+            FORCE_BUILD=1
             # create artifacts folder
             mkdir /tmp/artifacts
             # save value stored in file to a local env var
@@ -34,7 +36,7 @@ jobs:
 
               foldername=$(basename $folder)
 
-              if [[ $(git diff $COMMIT_RANGE --name-status | grep "$foldername") ]]; then
+              if [[ FORCE_BUILD || $(git diff $COMMIT_RANGE --name-status | grep "$foldername") ]]; then
 
                 echo "building ${foldername}"
                 cd ~/fpm-recipes/recipes/${foldername}/
