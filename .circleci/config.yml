@@ -41,7 +41,7 @@ jobs:
                 echo "building ${foldername}"
                 cd ~/fpm-recipes/recipes/${foldername}/
                 for recipe in ./recipe-*.rb; do 
-                  fpm-cook install-build-deps -t deb -p ubuntu ${recipe}
+                  sudo fpm-cook install-build-deps -t deb -p ubuntu ${recipe}
                   fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts ${recipe}
                 done
 
