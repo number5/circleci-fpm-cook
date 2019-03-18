@@ -7,10 +7,10 @@ workflows:
   version: 2
   publish-orbs:
     jobs:
-      - publish
+      - package
 
 jobs:
-  publish:
+  package:
     docker:
       - image: dubber/fpm-cook:trusty-b1
     working_directory: ~/fpm-recipes
@@ -30,26 +30,21 @@ jobs:
 
             echo "Commit range: $COMMIT_RANGE"
 
-            for RECIPE in ~/fpm-recipes/recipes/*/; do
+            for folder in ~/fpm-recipes/recipes/*/; do
 
-              RECIPEname=$(basename $RECIPE)
+              foldername=$(basename $folder)
 
-              if [[ $(git diff $COMMIT_RANGE --name-status | grep "$RECIPEname") ]]; then
+              if [[ $(git diff $COMMIT_RANGE --name-status | grep "$foldername") ]]; then
 
-                echo "building ${RECIPEname}"
-                cd ~/fpm-recipes/recipes/${RECIPEname}/
-                fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts 
+                echo "building ${foldername}"
+                cd ~/fpm-recipes/recipes/${foldername}/
+                for recipe in ./recipe-*.rb; do 
+                  fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts $recipe
+                done
 
               else
-                echo "${RECIPEname} not modified; no need to build"
+                echo "${foldername} not modified; no need to build"
               fi
             done
-      - run:
-          name: Build nginx
-          shell: /bin/bash -exo pipefail
-          command: |
-            cd recipes/nginx
-            fpm-cook package -t deb -p ubuntu --pkg-dir /tmp/artifacts 
-            ls /tmp/artifacts
       - store_artifacts:
           path: /tmp/artifacts
