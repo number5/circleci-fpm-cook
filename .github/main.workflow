@@ -17,4 +17,3 @@ jobs:
         id: hello
       # This step prints the time.
       - run: echo The time was ${{ steps.hello.outputs.time }}
-
